@@ -37,7 +37,6 @@ def full_info():
         device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
         device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
         device_info[str(i)]['memory_clock'] = nvmlDeviceGetApplicationsClock(handle, NVML_CLOCK_MEM)
-        device_info[str(i)]['gpu_clock'] = nvmlDeviceGetApplicationsClock(handle, NVML_CLOCK_GRAPHICS)
 
     return jsonify({
         'total_gpu': total_gpu,
