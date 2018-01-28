@@ -34,6 +34,7 @@ def full_info():
             handle = nvmlDeviceGetHandleByIndex(i)
             device_info[str(i)] = {}
             device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
+            device_info[str(i)]['power_limit'] = (nvmlDeviceGetPowerManagementLimit(handle) / 1000.0)
             device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
             device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
         except NVMLError:
