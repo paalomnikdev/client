@@ -32,11 +32,11 @@ def full_info():
     })
 
 
-@app.route('/command/<command>', defaults={'command': None})
-def command(command):
-    if command is 'full-info':
+@app.route('/command/<command_query>', defaults={'command_query': None})
+def command(command_query):
+    if command_query is 'full-info':
         return full_info()
-    elif command is 'test':
+    elif command_query is 'test':
         pass
 
 
