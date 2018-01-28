@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 import requests
 import time
-from py3nvml.py3nvml import nvmlDeviceGetCount, nvmlInit
+from py3nvml.py3nvml import nvmlDeviceGetCount, nvmlInit, nvmlUnitGetTemperature
 from pprint import pprint
 
 
@@ -27,6 +27,9 @@ for x in range(0, 10):
 
 def full_info():
     total_gpu = nvmlDeviceGetCount()
+
+    for i in range(0, total_gpu - 1):
+        print(nvmlUnitGetTemperature(i))
 
     return jsonify({
         'total_gpu': total_gpu
