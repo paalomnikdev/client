@@ -33,7 +33,7 @@ def full_info():
         try:
             handle = nvmlDeviceGetHandleByIndex(i)
             device_info[str(i)] = {}
-            device_info['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
+            device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
         except NVMLError:
             print('A')
 
