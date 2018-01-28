@@ -30,15 +30,14 @@ def full_info():
     total_gpu = nvmlDeviceGetCount()
     device_info = {}
     for i in range(0, total_gpu):
-        try:
-            handle = nvmlDeviceGetHandleByIndex(i)
-            device_info[str(i)] = {}
-            device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
-            device_info[str(i)]['power_limit'] = (nvmlDeviceGetPowerManagementLimit(handle) / 1000.0)
-            device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
-            device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
-        except NVMLError:
-            print('A')
+        handle = nvmlDeviceGetHandleByIndex(i)
+        device_info[str(i)] = {}
+        device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
+        device_info[str(i)]['power_limit'] = (nvmlDeviceGetPowerManagementLimit(handle) / 1000.0)
+        device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
+        device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
+        device_info[str(i)]['memory_clock'] = nvmlDeviceGetApplicationsClock(handle, NVML_CLOCK_MEM)
+        device_info[str(i)]['gpu_clock'] = nvmlDeviceGetApplicationsClock(handle, NVML_CLOCK_GRAPHICS)
 
     return jsonify({
         'total_gpu': total_gpu,
