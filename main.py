@@ -32,8 +32,8 @@ def full_info():
     for i in range(0, total_gpu - 1):
         try:
             handle = nvmlDeviceGetHandleByIndex(i)
-            pprint(handle)
-            device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
+            device_info[str(i)] = {}
+            device_info['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
         except NVMLError:
             print('A')
 
