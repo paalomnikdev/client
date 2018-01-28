@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 import requests
 import time
 from py3nvml.py3nvml import nvmlDeviceGetCount, nvmlInit
+from pprint import pprint
 
 
 nvmlInit()
@@ -34,9 +35,10 @@ def full_info():
 
 @app.route('/gpu-control/<f>')
 def execute_command_query(f):
-    if f is 'fullinfo':
+    pprint(f)
+    if f == 'fullinfo':
         return full_info()
-    elif f is 'test':
+    elif f == 'test':
         pass
     else:
         return jsonify({})
