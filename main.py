@@ -12,8 +12,7 @@ for x in range(0, 10):
             'http://{master_node}/register'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
             data={
                 'name': app.config['IDENTITY_FOR_SERVER'],
-                'secret': app.config['SECRET_TOKEN'],
-                'command_ip': '{host}:{port}'.format(host=app.config['HOST'], port=app.config['PORT'])
+                'secret': app.config['SECRET_TOKEN']
             }
         )
         break
