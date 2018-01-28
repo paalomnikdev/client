@@ -28,8 +28,9 @@ for x in range(0, 10):
 def full_info():
     total_gpu = nvmlDeviceGetCount()
 
-    for i in range(0, total_gpu - 1):
+    for i in range(0, total_gpu):
         handle = nvmlDeviceGetHandleByIndex(i)
+        pprint(handle)
         pprint(nvmlUnitGetTemperature(handle, NVML_TEMPERATURE_GPU))
 
     return jsonify({
