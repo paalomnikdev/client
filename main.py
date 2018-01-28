@@ -32,12 +32,14 @@ def full_info():
     })
 
 
-@app.route('/command/<command_query>', defaults={'command_query': None})
-def execute_command_query(command_query):
-    if command_query is 'full-info':
+@app.route('/gpu-control/<f>')
+def execute_command_query(f):
+    if f is 'fullinfo':
         return full_info()
-    elif command_query is 'test':
+    elif f is 'test':
         pass
+    else:
+        return jsonify({})
 
 
 @app.route('/check-alive')
