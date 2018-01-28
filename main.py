@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 import requests
 import time
-from py3nvml.py3nvml import nvmlDeviceGetCount, nvmlInit, nvmlDeviceGetTemperature, nvmlDeviceGetHandleByIndex, NVML_TEMPERATURE_GPU, NVMLError, nvmlDeviceGetFanSpeed
+from py3nvml.py3nvml import *
 from pprint import pprint
 
 
@@ -33,6 +33,7 @@ def full_info():
         try:
             handle = nvmlDeviceGetHandleByIndex(i)
             device_info[str(i)] = {}
+            device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
             device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
             device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
         except NVMLError:
