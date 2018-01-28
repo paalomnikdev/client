@@ -32,7 +32,7 @@ def full_info():
         try:
             handle = nvmlDeviceGetHandleByIndex(i)
             pprint(handle)
-            pprint(nvmlUnitGetTemperature(handle, NVML_TEMPERATURE_GPU))
+            print(str(nvmlUnitGetTemperature(handle, NVML_TEMPERATURE_GPU)))
         except NVMLError:
             print('A')
 
