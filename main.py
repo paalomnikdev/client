@@ -1,7 +1,10 @@
 from flask import Flask, jsonify
 import requests
 import time
+from py3nvml.py3nvml import nvmlDeviceGetCount, nvmlInit
 
+
+nvmlInit()
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
 
@@ -21,9 +24,20 @@ for x in range(0, 10):
         continue
 
 
+def full_info():
+    total_gpu = nvmlDeviceGetCount()
+
+    return jsonify({
+        'total_gpu': total_gpu
+    })
+
+
 @app.route('/command/<command>', defaults={'command': None})
 def command(command):
-    pass
+    if command is 'full-info':
+        return full_info()
+    elif command is 'test':
+        pass
 
 
 @app.route('/check-alive')
