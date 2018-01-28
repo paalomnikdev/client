@@ -29,7 +29,7 @@ def full_info():
     nvmlInit()
     total_gpu = nvmlDeviceGetCount()
     device_info = {}
-    for i in range(0, total_gpu - 1):
+    for i in range(0, total_gpu):
         try:
             handle = nvmlDeviceGetHandleByIndex(i)
             device_info[str(i)] = {}
