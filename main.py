@@ -28,17 +28,18 @@ for x in range(0, 10):
 def full_info():
     nvmlInit()
     total_gpu = nvmlDeviceGetCount()
-
-    for i in range(0, total_gpu):
+    device_info = {}
+    for i in range(0, total_gpu - 1):
         try:
             handle = nvmlDeviceGetHandleByIndex(i)
             pprint(handle)
-            print(str(nvmlDeviceGetFanSpeed(handle)))
+            device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
         except NVMLError:
             print('A')
 
     return jsonify({
-        'total_gpu': total_gpu
+        'total_gpu': total_gpu,
+        'device_info': device_info
     })
 
 
