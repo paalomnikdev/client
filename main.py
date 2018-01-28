@@ -33,7 +33,7 @@ def full_info():
 
 
 @app.route('/command/<command_query>', defaults={'command_query': None})
-def command(command_query):
+def execute_command_query(command_query):
     if command_query is 'full-info':
         return full_info()
     elif command_query is 'test':
