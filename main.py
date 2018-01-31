@@ -93,10 +93,7 @@ def set_config(params):
 
         if 'fan_speed' in params:
             os.popen(
-                'nvidia-settings -a [gpu:{i}]/GPUFanControlState=1'.format(i=params['id'])
-            )
-            os.popen(
-                'nvidia-settings -a [fan:{i}]/GPUTargetFanSpeed={v}'.format(
+                'nvidia-settings -a [gpu:{i}]/GPUFanControlState=1 -a [fan-0]/GPUTargetFanSpeed={v}'.format(
                     i=params['id'],
                     v=params['fan_speed']
                 )
