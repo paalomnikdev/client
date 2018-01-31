@@ -113,11 +113,10 @@ def set_config(params):
 
 @app.route('/gpu-control/<f>')
 def execute_command_query(f):
-    pprint(f)
     if f == 'fullinfo':
         return full_info()
     elif f == 'set-config':
-        set_config(request.form)
+        return set_config(request.form)
     else:
         return jsonify({})
 
