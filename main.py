@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import requests
 import time
 from py3nvml.py3nvml import *
@@ -50,13 +50,73 @@ def full_info():
     })
 
 
+def set_config(params):
+    if 'id' not in params:
+        return jsonify({'success': False})
+    success = True
+    message = ''
+    try:
+        os.popen('nvidia-smi -i {i} -pm 1'.format(i=params['id']))
+        if 'power_limit' in params:
+            os.popen(
+                'nvidia-smi -i {i} -pl {v}'.format(i=params['id'], v=params['power_limit'])
+            )
+
+        if 'memory_clock' in params:
+            os.popen(
+                'nvidia-settings -a [gpu:{i}]/GPUMemoryTransferRateOffset[3]={v}'.format(
+                    i=params['id'],
+                    v=params['memory_clock']
+                )
+            )
+            os.popen(
+                'nvidia-settings -a [gpu:{i}]/GPUMemoryTransferRateOffset[2]={v}'.format(
+                    i=params['id'],
+                    v=params['memory_clock']
+                )
+            )
+
+        if 'gpu_clock' in params:
+            os.popen(
+                'nvidia-settings -a [gpu:{i}]/GPUGraphicsClockOffset[3]={v}'.format(
+                    i=params['id'],
+                    v=params['gpu_clock']
+                )
+            )
+            os.popen(
+                'nvidia-settings -a [gpu:{i}]/GPUGraphicsClockOffset[2]={v}'.format(
+                    i=params['id'],
+                    v=params['gpu_clock']
+                )
+            )
+
+        if 'fan_speed' in params:
+            os.popen(
+                'nvidia-settings -a [gpu:{i}]/GPUFanControlState=1'.format(i=params['id'])
+            )
+            os.popen(
+                'nvidia-settings -a [fan:{i}]/GPUTargetFanSpeed={v}'.format(
+                    i=params['id'],
+                    v=params['fan_speed']
+                )
+            )
+    except:
+        success = False
+        message = 'Something went wrong. Please check rig\'s log.'
+
+    return jsonify({
+        'success': success,
+        'message': message
+    })
+
+
 @app.route('/gpu-control/<f>')
 def execute_command_query(f):
     pprint(f)
     if f == 'fullinfo':
         return full_info()
-    elif f == 'test':
-        pass
+    elif f == 'set-config':
+        set_config(request.form)
     else:
         return jsonify({})
 
