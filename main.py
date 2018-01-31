@@ -60,7 +60,7 @@ def set_config(params):
         os.popen('nvidia-smi -i {i} -pm 1'.format(i=params['id']))
         if 'power_limit' in params:
             os.popen(
-                'nvidia-smi -i {i} -pl {v}'.format(i=params['id'], v=params['power_limit'])
+                'sudo nvidia-smi -i {i} -pl {v}'.format(i=params['id'], v=params['power_limit'])
             )
 
         if 'memory_clock' in params:
