@@ -51,6 +51,7 @@ def full_info():
 
 
 def set_config(params):
+    pprint(params)
     if 'id' not in params:
         return jsonify({'success': False})
     success = True
