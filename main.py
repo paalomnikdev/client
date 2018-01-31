@@ -111,7 +111,7 @@ def set_config(params):
     })
 
 
-@app.route('/gpu-control/<f>')
+@app.route('/gpu-control/<f>', methods=['POST', 'GET'])
 def execute_command_query(f):
     if f == 'fullinfo':
         return full_info()
