@@ -34,15 +34,14 @@ def full_info():
 
 for x in range(0, 10):
     # try:
-    with app.app_context():
-        requests.post(
-            'http://{master_node}/register'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
-            data={
-                'name': app.config['IDENTITY_FOR_SERVER'],
-                'secret': app.config['SECRET_TOKEN'],
-                'stats': jsonify(full_info())
-            }
-        )
+    requests.post(
+        'http://{master_node}/register'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
+        data={
+            'name': app.config['IDENTITY_FOR_SERVER'],
+            'secret': app.config['SECRET_TOKEN'],
+            'stats': full_info()
+        }
+    )
     #     break
     # except:
     #     time.sleep(20)
