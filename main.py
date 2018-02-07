@@ -40,7 +40,7 @@ for x in range(0, 10):
         data={
             'name': app.config['IDENTITY_FOR_SERVER'],
             'secret': app.config['SECRET_TOKEN'],
-            'stats': json.dumps(jsonify(full_info()))
+            'stats': json.dumps(full_info())
         }
     )
     #     break
