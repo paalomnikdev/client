@@ -10,9 +10,6 @@ nvmlInit()
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
 
-os.popen('sudo chmod +x overclock.sh')
-os.popen('sudo ./overclock.sh')
-
 
 def full_info():
     nvmlInit()
