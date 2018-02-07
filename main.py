@@ -30,7 +30,7 @@ def full_info():
             'nvidia-settings -q [gpu:{gpu_num}]/GPUGraphicsClockOffset -t'.format(gpu_num=str(i))
         ).read()
 
-    return {'device_info': device_info}
+    return device_info
 
 
 for x in range(0, 10):
