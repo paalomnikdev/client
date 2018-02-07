@@ -33,7 +33,8 @@ def full_info():
 
 
 for x in range(0, 10):
-    try:
+    # try:
+    with app.app_context():
         requests.post(
             'http://{master_node}/register'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
             data={
@@ -42,10 +43,10 @@ for x in range(0, 10):
                 'stats': jsonify(full_info())
             }
         )
-        break
-    except:
-        time.sleep(20)
-        continue
+    #     break
+    # except:
+    #     time.sleep(20)
+    #     continue
 
 
 def set_config(params):
