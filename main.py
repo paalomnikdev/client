@@ -10,20 +10,8 @@ nvmlInit()
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
 
-
-for x in range(0, 10):
-    try:
-        requests.post(
-            'http://{master_node}/register'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
-            data={
-                'name': app.config['IDENTITY_FOR_SERVER'],
-                'secret': app.config['SECRET_TOKEN']
-            }
-        )
-        break
-    except:
-        time.sleep(20)
-        continue
+os.popen('sudo chmod +x overclock.sh')
+os.popen('sudo ./overclock.sh')
 
 
 def full_info():
@@ -44,10 +32,23 @@ def full_info():
             'nvidia-settings -q [gpu:{gpu_num}]/GPUGraphicsClockOffset -t'.format(gpu_num=str(i))
         ).read()
 
-    return jsonify({
-        'total_gpu': total_gpu,
-        'device_info': device_info
-    })
+    return {'device_info': device_info}
+
+
+for x in range(0, 10):
+    try:
+        requests.post(
+            'http://{master_node}/register'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
+            data={
+                'name': app.config['IDENTITY_FOR_SERVER'],
+                'secret': app.config['SECRET_TOKEN'],
+                'stats': jsonify(full_info())
+            }
+        )
+        break
+    except:
+        time.sleep(20)
+        continue
 
 
 def set_config(params):
@@ -113,9 +114,7 @@ def set_config(params):
 
 @app.route('/gpu-control/<f>', methods=['POST', 'GET'])
 def execute_command_query(f):
-    if f == 'fullinfo':
-        return full_info()
-    elif f == 'set-config':
+    if f == 'set-config':
         return set_config(request.form)
     else:
         return jsonify({})
@@ -123,7 +122,17 @@ def execute_command_query(f):
 
 @app.route('/check-alive')
 def check_alive():
-    return jsonify({'alive': 'yes'})
+    alive = True
+    result = {}
+    try:
+        result = full_info()
+    except:
+        alive = False
+
+    return jsonify({
+        'alive': alive,
+        'result': result
+    })
 
 
 if __name__ == '__main__':
