@@ -36,10 +36,9 @@ def full_info():
 for x in range(0, 10):
     # try:
     requests.post(
-        'http://{master_node}/register'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
+        'http://{master_node}/register-rig'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
         data={
             'name': app.config['IDENTITY_FOR_SERVER'],
-            'secret': app.config['SECRET_TOKEN'],
             'stats': json.dumps(full_info())
         }
     )
