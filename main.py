@@ -49,7 +49,6 @@ for x in range(0, 10):
 
 
 def set_config(params):
-    pprint(params)
     if 'id' not in params:
         return jsonify({'success': False})
     success = True
@@ -65,13 +64,13 @@ def set_config(params):
             os.popen(
                 'nvidia-settings -a [gpu:{i}]/GPUMemoryTransferRateOffset[3]={v}'.format(
                     i=params['id'],
-                    v=params['memory_clock']
+                    v=params['memory_overclock']
                 )
             )
             os.popen(
                 'nvidia-settings -a [gpu:{i}]/GPUMemoryTransferRateOffset[2]={v}'.format(
                     i=params['id'],
-                    v=params['memory_clock']
+                    v=params['memory_overclock']
                 )
             )
 
@@ -79,13 +78,13 @@ def set_config(params):
             os.popen(
                 'nvidia-settings -a [gpu:{i}]/GPUGraphicsClockOffset[3]={v}'.format(
                     i=params['id'],
-                    v=params['gpu_clock']
+                    v=params['core_overclock']
                 )
             )
             os.popen(
                 'nvidia-settings -a [gpu:{i}]/GPUGraphicsClockOffset[2]={v}'.format(
                     i=params['id'],
-                    v=params['gpu_clock']
+                    v=params['core_overclock']
                 )
             )
 
