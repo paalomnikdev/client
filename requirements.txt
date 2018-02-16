@@ -9,4 +9,5 @@ MarkupSafe==1.0
 py3nvml==0.1.0rc7
 requests==2.18.4
 urllib3==1.22
+uWSGI==2.0.16
 Werkzeug==0.14.1
