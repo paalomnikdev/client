@@ -17,18 +17,22 @@ def full_info():
     total_gpu = nvmlDeviceGetCount()
     device_info = {}
     for i in range(0, total_gpu):
-        handle = nvmlDeviceGetHandleByIndex(i)
-        device_info[str(i)] = {}
-        device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
-        device_info[str(i)]['power_limit'] = (nvmlDeviceGetPowerManagementLimit(handle) / 1000.0)
-        device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
-        device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
-        device_info[str(i)]['memory_overclock'] = os.popen(
-            'nvidia-settings -q [gpu:{gpu_num}]/GPUMemoryTransferRateOffset -t'.format(gpu_num=str(i))
-        ).read().strip()
-        device_info[str(i)]['core_overclock'] = os.popen(
-            'nvidia-settings -q [gpu:{gpu_num}]/GPUGraphicsClockOffset -t'.format(gpu_num=str(i))
-        ).read().strip()
+        try:
+            handle = nvmlDeviceGetHandleByIndex(i)
+            device_info[str(i)] = {}
+            device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
+            device_info[str(i)]['power_limit'] = (nvmlDeviceGetPowerManagementLimit(handle) / 1000.0)
+            device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
+            device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
+            device_info[str(i)]['memory_overclock'] = os.popen(
+                'nvidia-settings -q [gpu:{gpu_num}]/GPUMemoryTransferRateOffset -t'.format(gpu_num=str(i))
+            ).read().strip()
+            device_info[str(i)]['core_overclock'] = os.popen(
+                'nvidia-settings -q [gpu:{gpu_num}]/GPUGraphicsClockOffset -t'.format(gpu_num=str(i))
+            ).read().strip()
+        except NVMLError:
+            os.system('sudo shutdown -r now')
+            raise Exception('Card is down')
 
     return device_info
 
@@ -51,7 +55,6 @@ for x in range(0, 10):
 def set_config(params):
     if 'id' not in params:
         return jsonify({'success': False})
-    success = True
     message = ''
     try:
         os.popen('nvidia-smi -i {i} -pm 1'.format(i=params['id']))
@@ -99,11 +102,15 @@ def set_config(params):
                 )
             )
     except:
-        success = False
         message = 'Something went wrong. Please check rig\'s log.'
+        os.system('sudo shutdown -r now')
+        return jsonify({
+            'success': False,
+            'message': message
+        })
 
     return jsonify({
-        'success': success,
+        'success': True,
         'message': message
     })
 
@@ -118,15 +125,17 @@ def execute_command_query(f):
 
 @app.route('/check-alive')
 def check_alive():
-    alive = True
     result = {}
     try:
         result = full_info()
     except:
-        alive = False
+        return jsonify({
+            'alive': False,
+            'result': result
+        })
 
     return jsonify({
-        'alive': alive,
+        'alive': True,
         'result': result
     })
 
