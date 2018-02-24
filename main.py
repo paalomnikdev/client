@@ -23,7 +23,7 @@ def full_info():
             device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
             device_info[str(i)]['power_limit'] = (nvmlDeviceGetPowerManagementLimit(handle) / 1000.0)
             device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
-            temperature = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
+            temperature = int(nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU))
             if temperature > app.config['TEMP_LIMIT']:
                 os.system('sudo shutdown -r now')
             device_info[str(i)]['temperature'] = temperature
@@ -59,7 +59,7 @@ for x in range(0, 10):
         )
         json_data = json.loads(response.text)
         if 'temp_limit' in json_data:
-            app.config['TEMP_LIMIT'] = json_data['temp_limit']
+            app.config['TEMP_LIMIT'] = int(json_data['temp_limit'])
         break
     except:
         time.sleep(20)
