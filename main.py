@@ -23,14 +23,25 @@ def full_info():
             device_info[str(i)]['name'] = nvmlDeviceGetName(handle)
             device_info[str(i)]['power_limit'] = (nvmlDeviceGetPowerManagementLimit(handle) / 1000.0)
             device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
-            device_info[str(i)]['temperature'] = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
-            device_info[str(i)]['memory_overclock'] = os.popen(
+            temperature = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
+            if temperature > app.config['TEMP_LIMIT']:
+                os.system('sudo shutdown -r now')
+            device_info[str(i)]['temperature'] = temperature
+            memory_overclock = os.popen(
                 'nvidia-settings -q [gpu:{gpu_num}]/GPUMemoryTransferRateOffset -t'.format(gpu_num=str(i))
             ).read().strip()
-            device_info[str(i)]['core_overclock'] = os.popen(
+            if len(memory_overclock) > 10:
+                raise Exception('Card is down')
+            else:
+                device_info[str(i)]['memory_overclock'] = memory_overclock
+            core_overclock = os.popen(
                 'nvidia-settings -q [gpu:{gpu_num}]/GPUGraphicsClockOffset -t'.format(gpu_num=str(i))
             ).read().strip()
-        except NVMLError:
+            if len(core_overclock) > 10:
+                raise Exception('Card is down')
+            else:
+                device_info[str(i)]['core_overclock'] = core_overclock
+        except:
             os.system('sudo shutdown -r now')
             raise Exception('Card is down')
 
@@ -39,13 +50,16 @@ def full_info():
 
 for x in range(0, 10):
     try:
-        requests.post(
+        response = requests.post(
             'http://{master_node}/api/register-rig'.format(master_node=app.config['MASTER_NODE_ADDRESS']),
             data={
                 'name': app.config['IDENTITY_FOR_SERVER'],
                 'stats': json.dumps(full_info())
             }
         )
+        json_data = json.loads(response.text)
+        if 'temp_limit' in json_data:
+            app.config['TEMP_LIMIT'] = json_data['temp_limit']
         break
     except:
         time.sleep(20)
@@ -103,7 +117,6 @@ def set_config(params):
             )
     except:
         message = 'Something went wrong. Please check rig\'s log.'
-        os.system('sudo shutdown -r now')
         return jsonify({
             'success': False,
             'message': message
@@ -119,8 +132,10 @@ def set_config(params):
 def execute_command_query(f):
     if f == 'set-config':
         return set_config(request.form)
-    else:
-        return jsonify({})
+    elif f == 'reboot':
+        os.system('sudo shutdown -r now')
+
+    return jsonify({})
 
 
 @app.route('/check-alive')
