@@ -4,12 +4,20 @@ import time
 from py3nvml.py3nvml import *
 from pprint import pprint
 import os
+import subprocess
 import json
 
 
 nvmlInit()
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
+
+
+def reboot():
+    command = "/usr/bin/sudo /sbin/shutdown -r now"
+    import subprocess
+    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+    process.communicate()
 
 
 def full_info():
@@ -25,7 +33,7 @@ def full_info():
             device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
             temperature = int(nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU))
             if temperature > app.config['TEMP_LIMIT']:
-                os.system('sudo shutdown -r now')
+                reboot()
             device_info[str(i)]['temperature'] = temperature
             memory_overclock = os.popen(
                 'nvidia-settings -q [gpu:{gpu_num}]/GPUMemoryTransferRateOffset -t'.format(gpu_num=str(i))
@@ -42,7 +50,7 @@ def full_info():
             else:
                 device_info[str(i)]['core_overclock'] = core_overclock
         except:
-            os.system('sudo shutdown -r now')
+            reboot()
             raise Exception('Card is down')
 
     return device_info
@@ -133,7 +141,7 @@ def execute_command_query(f):
     if f == 'set-config':
         return set_config(request.form)
     elif f == 'reboot':
-        os.system('sudo shutdown -r now')
+        reboot()
 
     return jsonify({})
 
