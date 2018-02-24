@@ -25,26 +25,20 @@ def full_info():
             device_info[str(i)]['fan_speed'] = nvmlDeviceGetFanSpeed(handle)
             temperature = nvmlDeviceGetTemperature(handle, NVML_TEMPERATURE_GPU)
             if temperature > app.config['TEMP_LIMIT']:
-                print('temp limit')
-                pprint(app.config['TEMP_LIMIT'])
                 os.system('sudo shutdown -r now')
             device_info[str(i)]['temperature'] = temperature
             memory_overclock = os.popen(
                 'nvidia-settings -q [gpu:{gpu_num}]/GPUMemoryTransferRateOffset -t'.format(gpu_num=str(i))
             ).read().strip()
             if len(memory_overclock) > 10:
-                pprint(memory_overclock)
-                pprint(len(memory_overclock))
-                # raise Exception('Card is down')
+                raise Exception('Card is down')
             else:
                 device_info[str(i)]['memory_overclock'] = memory_overclock
             core_overclock = os.popen(
                 'nvidia-settings -q [gpu:{gpu_num}]/GPUGraphicsClockOffset -t'.format(gpu_num=str(i))
             ).read().strip()
             if len(core_overclock) > 10:
-                pprint(memory_overclock)
-                pprint(len(memory_overclock))
-                # raise Exception('Card is down')
+                raise Exception('Card is down')
             else:
                 device_info[str(i)]['core_overclock'] = core_overclock
         except:
