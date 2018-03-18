@@ -4,9 +4,8 @@ import time
 from py3nvml.py3nvml import *
 from pprint import pprint
 import os
-import subprocess
+import stat
 import json
-import getpass
 
 
 nvmlInit()
