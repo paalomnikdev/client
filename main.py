@@ -141,13 +141,10 @@ def set_config(params):
 def set_miner():
     params = request.form
     if 'command' in params and 'miner_path' in params:
-        with open('miner.conf', 'r') as conf_template:
-            conf = conf_template.read()
-            conf = conf.replace('{command}', 'miner').replace('{miner_path}', 'path').replace('{user}', getpass.getuser())
-            print(conf)
-            comm = 'sudo cat >/etc/supervisor/conf.d/miner.conf {conf}'.format(conf=conf)
-            print(comm)
-            os.popen(comm)
+        shFile = open('miner.sh', 'w')
+        shFile.write(
+            '{home_dir}/{miner_path} {command}'.format(home_dir=os.path.expanduser('~'), miner_path=params['miner_path'], command=params['command'])
+        )
 
     return jsonify({'result': 'ok'})
 
