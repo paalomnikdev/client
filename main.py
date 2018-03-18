@@ -143,9 +143,10 @@ def set_miner():
     if 'command' in params and 'miner_path' in params:
         with open('miner.conf', 'r') as conf_template:
             conf = conf_template.read()
-            conf.replace('{command}', 'miner')
-            conf.replace('{miner_path}', 'path')
-            conf.replace('{user}', getpass.getuser())
+            conf = conf.replace('{command}', 'miner')
+            conf = conf.replace('{miner_path}', 'path')
+            conf = conf.replace('{user}', getpass.getuser())
+            print(conf)
             os.popen('echo "{conf}" | sudo tee /etc/supervisor/conf.d/miner.conf'.format(conf=conf))
 
     return jsonify({'result': 'ok'})
