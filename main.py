@@ -148,6 +148,8 @@ def set_miner():
             conf.replace('{user}', getpass.getuser())
             os.popen('echo "{conf}" | sudo tee /etc/supervisor/conf.d/miner.conf'.format(conf=conf))
 
+    return jsonify({'result': 'ok'})
+
 
 @app.route('/gpu-control/<f>', methods=['POST', 'GET'])
 def execute_command_query(f):
