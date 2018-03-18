@@ -145,7 +145,7 @@ def set_miner():
             conf = conf_template.read()
             conf = conf.replace('{command}', 'miner').replace('{miner_path}', 'path').replace('{user}', getpass.getuser())
             print(conf)
-            os.popen('cat >/etc/supervisor/conf.d/miner.conf {conf}'.format(conf=conf))
+            os.popen('sudo cat >/etc/supervisor/conf.d/miner.conf {conf}'.format(conf=conf))
 
     return jsonify({'result': 'ok'})
 
