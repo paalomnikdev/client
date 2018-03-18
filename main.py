@@ -145,6 +145,8 @@ def set_miner():
         shFile.write(
             '{home_dir}/{miner_path} {command}'.format(home_dir=os.path.expanduser('~'), miner_path=params['miner_path'], command=params['command'])
         )
+        os.chmod('miner.sh', 0o777)
+        os.popen('sudo service supervisor restart')
 
     return jsonify({'result': 'ok'})
 
