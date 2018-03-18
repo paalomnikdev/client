@@ -6,6 +6,7 @@ from pprint import pprint
 import os
 import subprocess
 import json
+import getpass
 
 
 nvmlInit()
@@ -134,6 +135,18 @@ def set_config(params):
         'success': True,
         'message': message
     })
+
+
+@app.route('/miner', methods=['POST'])
+def set_miner():
+    params = request.form
+    if 'command' in params and 'miner_path' in params:
+        with open('miner.conf', 'r') as conf_template:
+            conf = conf_template.read()
+            conf.replace('{command}', 'miner')
+            conf.replace('{miner_path}', 'path')
+            conf.replace('{user}', getpass.getuser())
+            os.popen('echo "{conf}" | sudo tee /etc/supervisor/conf.d/miner.conf'.format(conf=conf))
 
 
 @app.route('/gpu-control/<f>', methods=['POST', 'GET'])
