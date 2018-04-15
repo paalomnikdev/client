@@ -14,7 +14,7 @@ app.config.from_pyfile('settings.py')
 
 
 def reboot():
-    command = "/usr/bin/sudo /sbin/shutdown -r now"
+    command = "/usr/bin/sudo /sbin/shutdown -r +1"
     import subprocess
     process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
     process.communicate()
